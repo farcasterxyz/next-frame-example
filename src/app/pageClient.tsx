@@ -3,7 +3,8 @@
 import { sdk } from '@farcaster/frame-sdk'
 import { farcasterFrame as frameConnector } from '@farcaster/frame-wagmi-connector'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useRouter } from "next/navigation";
+import { useEffect, useCallback } from 'react'
 import { WagmiProvider, useAccount, useConnect, useSignMessage } from 'wagmi'
 import { config } from './wagmiConfig'
 
@@ -26,6 +27,7 @@ function AppInner() {
 
   return (
     <>
+      <Back />
       <div>Simple Wagmi React Frame Example</div>
       <ConnectMenu />
     </>
@@ -57,6 +59,23 @@ function ConnectMenu() {
     </button>
   )
 }
+
+function Back() {
+  const router = useRouter();
+
+  const handleBackClick = useCallback(() => {
+    if (typeof window !== undefined && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  }, [router]);
+
+  return (
+    <button onClick={handleBackClick}>Back</button>
+  );
+}
+
 
 function SignButton() {
   const { signMessage, isPending, data, error } = useSignMessage()
